@@ -12,9 +12,9 @@ Make sure the addresses are not seperated by commas or space, one address each l
 
 
 CAUTION!!!!!
-I have no checks in place for existens of this file. Also, I have no checks if an amount of CATs was already sent out.
+I have no checks in place for existence of this file. Also, I have no checks if an amount of CAT was already sent out.
 
-The script creates a file named cat-airdrop.log in the same folder. If the script crashes or you have to kill it, you can check there which transaction was successfull to that point.
+The script creates a file named cat-airdrop.log in the same folder. If the script crashes or you have to kill it, you can check there which transaction was successfull to that point. If you start the tool again, it will overwrite this file!
 CAUTION!!!!!
 
 
@@ -32,15 +32,15 @@ SENDWALLETFINGERPRINT="<YOUR_WALLET_FINGERPRINT>" #for Example: 1234567890
 
 #Your CATs Wallet ID
 
-ID="<CAT_WALLET_ID>" #Your CAT wallet ID (default ID is 2 if it is the only CAT you have in that Wallet)
+ID="<CAT_WALLET_ID>" #Your CAT wallet ID (default ID is 2 if it is the only CAT you have in that wallet)
 
 #Depending on the Amount of Transactions you have to send out for the Airdrop, you have to split your Coins(Tokens) first to send them out.
 
-TRANSACTIONAMOUNT="2" #how many transaction?
+TRANSACTIONAMOUNT="2" #how many transaction/Tokens you want to send out?
 
 #Your CAT Wallet Address
 
-OWNADDRESS="<WALLET_ADDRESS>" #first CHIA/XCH wallet address of the wallet that holds your CAT
+OWNADDRESS="<WALLET_ADDRESS>" #first CHIA/XCH wallet address of the wallet that holds your CAT. Your Tokens will be send (split) back to that wallet first
 
 #The actual Amount of Tokens you want to send out for each individual Transaction
 
