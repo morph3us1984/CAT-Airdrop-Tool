@@ -53,3 +53,7 @@ FEE="0"
 #END OF CONFIG SECTION
 
 ########################################################################################
+
+
+If you found this tool helpful, consider donating (20% goes to Childrens Cancer Research):
+xch15wzttht49gsj44vqs3vne8dkyxc3hp29decaju5axzlj3w8tp3cs7nl3jk
