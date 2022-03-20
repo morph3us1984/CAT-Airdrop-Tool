@@ -20,7 +20,7 @@ CAUTION!!!!!
 
 
 
-In the Config Section you can change settings to fit your system and wallet
+In the Config Section within the script, you can change settings to fit your system and wallet. It looks like this:
 
 #######################################################################################
 
