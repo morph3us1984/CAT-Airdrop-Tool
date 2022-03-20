@@ -1,11 +1,15 @@
 # CAT-Airdrop-Tool
 This simple bash script uses RPC Calls to split and send out CATs
 
+Important:
 Make sure you have a file called "addresses.txt" with all addresses for this airdrop. It has to be in the same folder as the script itself.
+Make sure the addresses are not seperated by commas or space, one address each line.
 
+CAUTION!!!!!
+I have no checks in place for existens of this file. Also, I have no checks if an amount of CATs was already sent out.
 
-
-
+The script creates a file named cat-airdrop.log in the same folder. If the script crashes or you have to kill it, you can check there which transaction was successfull to that point.
+CAUTION!!!!!
 
 
 In the Config Section you can change settings to fit your system and wallet
