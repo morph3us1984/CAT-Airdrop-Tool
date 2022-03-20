@@ -19,7 +19,7 @@ NC="\e[0m"
 #Your CAT Wallet Fingerprint
 SENDWALLETFINGERPRINT="<YOUR_WALLET_FINGERPRINT>" #for Example: 1234567890
 #Your CATs Wallet ID
-ID="<CAT_WALLET_ID" #Your CAT wallet ID
+ID="<CAT_WALLET_ID>" #Your CAT wallet ID
 #Depending on the Amount of Transactions you have to send out for the Airdrop, you have to split your Coins(Tokens) first to send them out.
 TRANSACTIONAMOUNT="2" #how many transaction?
 #Your CAT Wallet Address
