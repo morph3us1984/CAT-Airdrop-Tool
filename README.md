@@ -1,5 +1,5 @@
 # CAT-Airdrop-Tool
-This simple bash script uses RPC Calls to split and send out CATs
+This simple bash script uses Chia RPC Calls to split and send out CATs to a list of addresses you collected.
 
 Important:
 Make sure you have a file called "addresses.txt" with all addresses for this airdrop. It has to be in the same folder as the script itself.
