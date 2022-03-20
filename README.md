@@ -56,4 +56,4 @@ FEE="0"
 
 
 If you found this tool helpful, consider donating (20% goes to Childrens Cancer Research):
-xch15wzttht49gsj44vqs3vne8dkyxc3hp29decaju5axzlj3w8tp3cs7nl3jk
+CHIA: xch1mck7cvljketqgzgrxkmuatl2hmz5f3f435tc095hu0gpkm70af3qgy28kk
