@@ -6,7 +6,7 @@ This simple bash script uses Chia RPC Calls to split and send out CATs to a list
 
 Important:
 Make sure you have a file called "addresses.txt" with all addresses for this airdrop. It has to be in the same folder as the script itself.
-Make sure the addresses are not seperated by commas or space, one address each line.
+Make sure the addresses are not seperated by commas or space, one address each line. Dont forget to add an empty line with a space at the end of the file. The amount of coins to be split depends on the amount of addresses in this file. 
 
 
 
@@ -33,10 +33,6 @@ SENDWALLETFINGERPRINT="<YOUR_WALLET_FINGERPRINT>" #for Example: 1234567890
 #Your CATs Wallet ID
 
 ID="<CAT_WALLET_ID>" #Your CAT wallet ID (default ID is 2 if it is the only CAT you have in that wallet)
-
-#Depending on the Amount of Transactions you have to send out for the Airdrop, you have to split your Coins(Tokens) first to send them out.
-
-TRANSACTIONAMOUNT="2" #how many transaction/Tokens you want to send out?
 
 #Your CAT Wallet Address
 
