@@ -14,100 +14,89 @@ GREEN="\e[32m"
 BLUE="\e[34m"
 YELLOW="\e[33m"
 NC="\e[0m"
+START="1"
+pwdtool=$(pwd)
+TRANSACTIONAMOUNT=$(cat "$pwdtool"/addresses.txt | wc -l) #how many transactions?
 ##########################################################################################
 #START OF CONFIG SECTION
 #Your CAT Wallet Fingerprint
-SENDWALLETFINGERPRINT="<YOUR_WALLET_FINGERPRINT>" #for Example: 1234567890
+SENDWALLETFINGERPRINT="YOUR_WALLET_FINGERPRINT" #for Example: 1234567890
 #Your CATs Wallet ID
-ID="<CAT_WALLET_ID>" #Your CAT wallet ID
-#Depending on the Amount of Transactions you have to send out for the Airdrop, you have to split your Coins(Tokens) first to send them out.
-TRANSACTIONAMOUNT="2" #how many transaction?
+ID="YOURWALLET_ID" #Your CAT wallet ID
 #Your CAT Wallet Address
-OWNADDRESS="<WALLET_ADDRESS>" #first CHIA/XCH wallet address of the wallet that holds your CAT
+OWNADDRESS="<YOUR_OWN_WALLET_ADDRESS_WHERE_COINS_WILL_BE_SPLIT" #first CHIA/XCH wallet address of the wallet that holds your CAT
 #The actual Amount of Tokens you want to send out for each individual Transaction
 AMOUNTOFCOINSTOSEND="1"
-#Fees in mojo if needed
+#Fees in mojo if needed, default= 0 Mojo
 FEE="0"
 #END OF CONFIG SECTION
 ###########################################################################################
 AMOUNT=$((AMOUNTOFCOINSTOSEND * 1000)) #Convert to Mojo because one Token is 1000
-#OLD METHOD cd ~/chia-blockchain && . ./activate
+cd ~/chia-blockchain && . ./activate
 date
-sleep 20s
-for i in {1.."$TRANSACTIONAMOUNT"}
+sleep 5s
+for (( c=$START; c<=$TRANSACTIONAMOUNT; c++ ))
 do
 echo "$AMOUNT"
                                 coinsplit="notdone"
                                 while [[ "$coinsplit" != "done" ]]
                                 do
-					echo "Transaction Number $i from $COINAMOUNT"
-					until [ `curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{}' -H "Content-Type: application/json" -X POST https://localhost:9256/get_sync_status | \
- python -m json.tool"" \
- | grep "synced"  \
- | cut -d"\"" -f 3 \
- | cut -d" " -f2 \
- | cut -d"," -f1` == "true" ]
+                                        echo "Transaction Number $c from $TRANSACTIONAMOUNT"
+                                        until [ `chia rpc wallet get_sync_status  | grep "synced"   | cut -d"\"" -f 3  | cut -d" " -f2  | cut -d"," -f1` == "true" ];
                                         do
                                                 echo  -e "${YELLOW}SEND Wallet not synced!${NC}"
                                                 sleep 30s
                                         done
-                                        #OLD METHOD until [ `chia wallet show -f "$SENDWALLETFINGERPRINT" | grep "Wallet ID $ID" -A3 | grep "Spendable:" | cut -d"(" -f2 | cut -d" " -f1` -ge "$MOJO" ] ;
-					until [ `curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{"wallet_id": '$ID'}' -H "Content-Type: application/json" -X POST https://localhost:9256/get_wallet_balance | python -m json.tool"" | grep "spendable_balance" | cut -d":" -f2 | cut -d" " -f2 |  cut -d"," -f1` -ge "$AMOUNT" ]
-					do
+                                        until [ `chia rpc wallet get_wallet_balance '{"wallet_id": '$ID'}' | grep "spendable_balance" | cut -d ":" -f 2 | cut -d " " -f2 | cut -d "," -f1` -ge "$AMOUNT" ] ;
+                                        do
                                                 echo  -e "${YELLOW}No enough funds yet...waiting 10 Seconds${NC}"
                                                 sleep 10s
                                         done
-                                        #OLD METHOD testvar=$(chia wallet send -f "$SENDWALLETFINGERPRINT" -i "$ID" -a "$AMOUNT" -t "$ADDRESS" -m "$FEE" | grep -o "submitted")
-					testvar=(`curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{"wallet_id": '$ID',"amount": '$AMOUNT',"fee": '$FEE',"inner_address": "'$OWNADDRESS'"}' -H "Content-Type: application/json" -X POST https://localhost:9256/cat_spend | python -m json.tool"" | grep "success" | cut -d":" -f2 | cut -d" " -f2 | cut -d"," -f1`)
-					if [ -z "$testvar" ]
+                                        output=$(chia rpc wallet cat_spend '{"fingerprint": '$SENDWALLETFINGERPRINT',"wallet_id": '$ID',"amount": '$AMOUNT',"fee": '$FEE',"inner_address": "'$OWNADDRESS'"}')
+                                        result=$(echo "$output" | grep "success" | cut -d ":" -f 2 | cut -d " " -f 2 | cut -d "," -f 1)
+                                        if [ "$result" != "true" ]
                                         then
                                                 echo -e "${RED}Error sending out PAYMENT, trying again...${NC}"
+                                                echo -e "Error: ${output}"
                                                 sleep 10s
-                                        elif [ "$testvar" == "true" ]
+                                        elif [ "$result" == "true" ]
                                         then
-						echo -e "${GREEN}PAYMENT Transaction worked${NC}"
+                                                echo -e "${GREEN}PAYMENT Transaction worked${NC}"
                                                 coinsplit="done"
-                                                sleep 10s
                                         fi
                                 done
 done
-TRANSACTIONS=($(cat addresses.txt))
+TRANSACTIONS=($(cat "$pwdtool"/addresses.txt))
 for address in "${TRANSACTIONS[@]}"
 do
-				transactionstatus="notdone"
+                                transactionstatus="notdone"
                                 while [[ "$transactionstatus" != "done" ]]
                                 do
                                         echo "Address to use for this transaction: $address"
-                                        until [ `curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{}' -H "Content-Type: application/json" -X POST https://localhost:9256/get_sync_status | \
- python -m json.tool"" \
- | grep "synced"  \
- | cut -d"\"" -f 3 \
- | cut -d" " -f2 \
- | cut -d"," -f1` == "true" ]
+                                        until [ `chia rpc wallet get_sync_status  | grep "synced"   | cut -d"\"" -f 3  | cut -d" " -f2  | cut -d"," -f1` == "true" ];
                                         do
                                                 echo  -e "${YELLOW}SEND Wallet not synced!${NC}"
                                                 sleep 30s
                                         done
-                                        #OLD METHOD until [ `chia wallet show -f "$SENDWALLETFINGERPRINT" | grep "Wallet ID $ID" -A3 | grep "Spendable:" | cut -d"(" -f2 | cut -d" " -f1` -ge "$MOJO" ] ;
-                                        until [ `curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{"wallet_id": '$ID'}' -H "Content-Type: application/json" -X POST https://localhost:9256/get_wallet_balance | python -m json.tool"" | grep "spendable_balance" | cut -d":" -f2 | cut -d" " -f2 |  cut -d"," -f1` -ge "$AMOUNT" ]
-					do
+                                        until [ `chia rpc wallet get_wallet_balance '{"wallet_id": '$ID'}' | grep "spendable_balance" | cut -d ":" -f 2 | cut -d " " -f2 | cut -d "," -f1` -ge "$AMOUNT" ] ;
+                                        do
                                                 echo  -e "${YELLOW}No enough funds yet...waiting 10 Seconds${NC}"
                                                 sleep 10s
                                         done
-                                        #OLD METHOD testvar=$(chia wallet send -f "$SENDWALLETFINGERPRINT" -i "$ID" -a "$AMOUNT" -t "$ADDRESS" -m "$FEE" | grep -o "submitted")
-                                        testvar=(`curl -s --insecure --cert ~/.chia/mainnet/config/ssl/full_node/private_full_node.crt --key ~/.chia/mainnet/config/ssl/full_node/private_full_node.key -d '{"wallet_id": '$ID',"amount": '$AMOUNT',"fee": '$FEE',"inner_address": "'$address'"}' -H "Content-Type: application/json" -X POST https://localhost:9256/cat_spend | python -m json.tool"" | grep "success" | cut -d":" -f2 | cut -d" " -f2 | cut -d"," -f1`)
-                                        if [ -z "$testvar" ]
-					then
+                                        output=$(chia rpc wallet cat_spend '{"fingerprint": '$SENDWALLETFINGERPRINT',"wallet_id": '$ID',"amount": '$AMOUNT',"fee": '$FEE',"inner_address": "'$address'"}')
+                                        result=$(echo "$output" | grep "success" | cut -d ":" -f 2 | cut -d " " -f 2 | cut -d "," -f 1)
+                                        if [ "$result" != "true" ]
+                                        then
                                                 echo -e "${RED}Error sending out PAYMENT, trying again...${NC}"
+                                                echo -e "Error: ${output}"
                                                 sleep 10s
-                                        elif [ "$testvar" == "true" ]
+                                        elif [ "$result" == "true" ]
                                         then
                                                 echo -e "${GREEN}PAYMENT Transaction worked${NC}"
                                                 transactionstatus="done"
-                                                sleep 10s
                                         fi
                                 done
 done
-#OLD METHOD deactivate && cd ~/cat-airdrop
+deactivate && cd -
 date
 echo "Script ended"
