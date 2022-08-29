@@ -51,5 +51,5 @@ FEE="0"
 ########################################################################################
 
 
-If you found this tool helpful, consider donating (20% goes to Childrens Cancer Research):
+If you found this tool helpful, consider donating (10% goes to Childrens Cancer Research):
 CHIA: xch1mck7cvljketqgzgrxkmuatl2hmz5f3f435tc095hu0gpkm70af3qgy28kk
